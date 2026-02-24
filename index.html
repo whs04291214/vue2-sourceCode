@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    <div id="app" style="color: red;font-size: 24px;">
+        {{msg}}
+        <h1>{{list}}</h1>
+        <h1>{{a.b}}</h1>
+        <h1>{{arr}}</h1>
+    </div>
+    <script src="./dist/vue.js"></script>
+    <script>
+        // Vue.Mixin({
+        //     created: function a() {
+        //         console.log('全局父级created----a')
+        //     }
+        // })
+        // Vue.Mixin({
+        //     created: function b() {
+        //         console.log('全局父级created----b')
+        //     }
+        // })
+        // Vue.Mixin({
+        //     mounted: function b() {
+        //         console.log('全局父级mounted----b')
+        //     }
+        // })
+        let vm = new Vue({
+            el: '#app',
+            data() {
+                // console.log(this)
+                return {
+                    msg: 'Hello World',
+                    name: "whs",
+                    a: { b: 10 },
+                    list: [1, 2, 3],
+                    arr: [
+                        {
+                            a: 20
+                        }
+                    ]
+                }
+            },
+            created() {
+                console.log("组件内created")
+            },
+            updated(){
+                console.log("组件内updated")
+            }
+            // mounted() {
+            //     console.log("组件内mounted")
+            // },
+            // data: {
+            //     msg: 'Hello World'
+            // }
+        })
+        //.$mount('#app')
+        //  console.log("vm",vm._data.msg);//get
+        // console.log("vm",vm._data.msg = 'whs');//set
+        // console.log("vm",vm._data);//多层
+        // console.log("vm",vm._data.a);//多层
+        // console.log("vm",vm._data.a = {c:20});//修改a的值
+        // console.log("vm",vm._data.list.push(4));//数组
+        // console.log("vm",vm._data.arr.push({b:100}));//数组
+
+        // vm.msg = vm._data.msg
+
+        // console.log("vm",vm.msg);
+        // vm.msg = 'whs'
+        // console.log("vm",vm.msg);
+        //vue首次渲染=》初始化数据=》模版编译=》render=》虚拟DOM=》真实DOM=》插入到页面上
+        //模版编译的方式 el template render el(必须存在) 优先级：render template el
+        //vue生命周期 实现原理 源码实现
+        // 1)Vue.Mixin({}) 混入
+        // 2)设计模式 订阅发布  --> option {created:[f1,f2,f3],watch:[f1,f2,f3]}
+        setTimeout(() => { 
+            //更新数据多次，调用vm._update(vm._render())多次，即多次渲染，极大的消耗性能，需要只执行一次渲染
+            //vue2.0采用异步更新策略
+            //批量处理=》vue异步处理，数据更新后，进入队列，等待统一处理，渲染一次
+            vm.msg = "Welcome to Your Vue.js App"
+            vm.a.b = 100
+            vm.list.push(4)
+            vm.arr.push({ b: 200 })
+            vm.nextTick(() => {
+                console.log(vm.$el.innerHTML)
+            })
+            // vm._update(vm._render()) //vm._render() 创建虚拟dom vm._update(虚拟dom) 创建真实dom,更新到页面上
+        }, 2000);
+        // 问题：数据更新，视图没有自动更新
+        // 1)数据更新，视图需要自动更新vm._update(vm._render())
+        // 2)vue2.0更新组件视图策略：以组件为单位，为每个组件添加一个Watcher进行检测，检测到属性变化后，会调用这个watcher
+
+
+        //实现对象的收集依赖
+        //dep和watcher的关系 多对多（相互保存） --->computed
+
+         // 三：数组收集
+        // 思路
+        //1:我们要给所有对象类型增加一个dep []
+        //2:获取数组的值，会调用get方法，我们希望让当前数组记住这个渲染的watcher
+           // 2.1 需要获取到当前dep
+           // 2.2 当前面对数组取值的时候，我们就让数组的dep记住这个watcher
+        // 3: 我们更新数组的时候 push、shift等等，找到我们这个watcher进行更新
+
+
+        //回归：
+        //1收集依赖：实现自动更新（vm._update(vm._render())）
+        //2创建watcher类进行扩展
+        //3 data和dep的关系 dep和watcher的关系
+            // 3.1 data属性和dep是一对一的关系
+            // 3.2 dep和watcher是多对多的关系 ,为了后面的计算属性
+    </script>
+</body>
+
+</html>

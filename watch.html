@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>watch</title>
+</head>
+
+<body>
+    <div id="app">
+        {{msg}}
+    </div>
+    <script src="/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                msg: 'Hello World',
+                a:{
+                    a:{
+                        a:10
+                    }
+                }
+            },
+            watch: {
+                // watch的基本使用方法
+                // 1.属性:方法（函数）
+                // 2.属性:数组
+                // 3.属性:对象
+                // 4.属性:字符串
+                'msg'(newVal, oldVal) {
+                    console.log(newVal, oldVal)
+                }, //方式1
+                'a.a.a'(newVal, oldVal){
+                    console.log(newVal, oldVal)
+                }
+                // msg(newVal, oldVal) {
+                //     console.log(newVal, oldVal)
+                // } 方式1
+                // msg: function (newVal, oldVal) {
+                //     console.log(newVal, oldVal)
+                // }方式1
+                // 'msg':[
+                //     (newVal, oldVal) =>{
+                //         console.log(newVal, oldVal,1)
+                //     },
+                //     (newVal, oldVal) =>{
+                //         console.log(newVal, oldVal,2)
+                //     }
+                // ],方式2
+                // msg:[
+                //     (newVal, oldVal) =>{
+                //         console.log(newVal, oldVal,1)
+                //     },
+                //     (newVal, oldVal) =>{
+                //         console.log(newVal, oldVal,2)
+                //     }
+                // ]方式2
+                // 'msg':{
+                //     handler:(newVal, oldVal) =>{
+                //         console.log(newVal, oldVal)
+                //     },
+                //     immediate:true,
+                //     // deep:true,
+                //     // async:true    //深度监听
+                // } //方式3 
+                // msg:{
+                //     handler:(newVal, oldVal) =>{
+                //         console.log(newVal, oldVal)
+                //     },
+                //     // immediate:true,
+                //     // deep:true,
+                //     // async:true    //深度监听
+                // }方式3
+
+                //'msg':'handleMsgChange' //方式4
+                // msg:'handleMsgChange' //方式4
+            },
+            methods: {
+                handleMsgChange(newVal, oldVal) {
+                    console.log(newVal, oldVal)
+                }
+            }
+        })
+        setTimeout(()=>{
+            vm.msg = "Hello Vue2";
+            vm.a.a.a = 200;
+        },2000)
+    </script>
+</body>
+
+</html>
